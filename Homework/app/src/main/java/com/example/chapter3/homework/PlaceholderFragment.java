@@ -50,13 +50,13 @@ public class PlaceholderFragment extends Fragment {
                 View target1, target2;
                 target1 = view.findViewById(R.id.animation_view_0);
                 ObjectAnimator animator1 = ObjectAnimator.ofFloat(target1, "Alpha", 1.0f, 0.0f);
-                animator1.setDuration(300);
+                animator1.setDuration(600);
 
                 target2 = view.findViewById(R.id.recycler);
                 target2.setAlpha(0);
                 target2.setVisibility(View.VISIBLE);
                 ObjectAnimator animator2 = ObjectAnimator.ofFloat(target2, "Alpha", 0.0f, 1.0f);
-                animator2.setDuration(300);
+                animator2.setDuration(600);
 
                 animatorSet = new AnimatorSet();
                 animatorSet.playTogether(animator1, animator2);
