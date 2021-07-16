@@ -65,8 +65,8 @@ public class UploadActivity extends AppCompatActivity {
         findViewById(R.id.btn_submit).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                submit();
-//                submitMessageWithURLConnection();
+//                submit();
+                submitMessageWithURLConnection();
             }
         });
     }
@@ -197,73 +197,69 @@ public class UploadActivity extends AppCompatActivity {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                String boundary = java.util.UUID.randomUUID().toString();
+//                String boundary = java.util.UUID.randomUUID().toString();
+                String boundary = "AdadgAghrusv414adDayhU";
                 String urlStr = Constants.BASE_URL + "messages" + "?student_id=" + Constants.STUDENT_ID + "&extra_value=" + "";
                 String twoHyphens = "--";
-                String Charset = "UTF-8";
                 String line_feed = "\r\n";
+                Log.d("Submit", boundary);
 
                 Log.d("Submit URL", urlStr);
                 try {
                     URL url = new URL(urlStr);
                     HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+                    connection.setRequestMethod("POST");
 
                     connection.setConnectTimeout(6000);
-                    connection.setDoInput(true);
-                    connection.setDoOutput(true);
+//                    connection.setDoInput(true);
+//                    connection.setDoOutput(true);
+//                    connection.setUseCaches(false);
 
-                    connection.setRequestMethod("POST");
-                    connection.setRequestProperty("Content-Type", "multipart/from-data; boundary=" + twoHyphens + boundary);
+                    connection.setRequestProperty("Content-Type", "multipart/form-data; boundary=" + boundary);
+                    connection.setRequestProperty("Connection", "Keep-Alive");
+//                    connection.setRequestProperty("Charset", "UTF-8");
                     connection.setRequestProperty("token", Constants.token);
-
-
-
-//                    connection.setRequestProperty("from", Constants.USER_NAME);
-//                    connection.setRequestProperty("to", to);
-//                    connection.setRequestProperty("content", content);
-                    StringBuilder sb = new StringBuilder();
+                    connection.connect();
 
                     DataOutputStream os = new DataOutputStream(connection.getOutputStream());
-
+                    StringBuilder sb = new StringBuilder();
 
                     sb.append(twoHyphens + boundary + line_feed);
                     sb.append("Content-Disposition: form-data; name=\"from\"" + line_feed);
-//                    sb.append("Content-Type: multipart/form-data" + line_feed);
-//                    sb.append("Content-Transfer-Encoding: 8bit" + line_feed);
+                    sb.append("Content-Type: text/plain; charset=UTF-8" + line_feed);
+                    sb.append("Content-Transfer-Encoding: 8-bit" + line_feed);
                     sb.append(line_feed);
                     sb.append(Constants.USER_NAME);
                     sb.append(line_feed);
 
                     sb.append(twoHyphens + boundary + line_feed);
                     sb.append("Content-Disposition: form-data; name=\"to\"" + line_feed);
-//                    sb.append("Content-Type: multipart/form-data" + line_feed);
-//                    sb.append("Content-Transfer-Encoding: 8bit" + line_feed);
+                    sb.append("Content-Type: text/plain; charset=UTF-8" + line_feed);
+                    sb.append("Content-Transfer-Encoding: 8-bit" + line_feed);
                     sb.append(line_feed);
                     sb.append(to);
                     sb.append(line_feed);
 
                     sb.append(twoHyphens + boundary + line_feed);
                     sb.append("Content-Disposition: form-data; name=\"content\"" + line_feed);
-//                    sb.append("Content-Type: multipart/form-data" + line_feed);
-//                    sb.append("Content-Transfer-Encoding: 8bit" + line_feed);
+                    sb.append("Content-Type: text/plain; charset=UTF-8" + line_feed);
+                    sb.append("Content-Transfer-Encoding: 8-bit" + line_feed);
                     sb.append(line_feed);
                     sb.append(content);
                     sb.append(line_feed);
 
-                    os.write(sb.toString().getBytes());
-                    MultipartBody.Part imagePart = MultipartBody.Part.createFormData("image", "cover.png",
-                            RequestBody.create(MediaType.parse("multipart/from_data"), coverImageData));
+                    sb.append(twoHyphens + boundary + line_feed);
+                    sb.append("Content-Disposition: form-data; name=\"image\"; filename=\"cover.png\"" + line_feed);
+                    sb.append("Content-Type: application/octet-stream" + line_feed);
+                    sb.append("Content-Transfer-Encoding: binary" + line_feed);
+                    sb.append(line_feed);
 
-                    Log.d("Submit Image", imagePart.body().toString());
-                    os.writeBytes("Content-Disposition: form-data; name=\"image\"; filename=\"cover.jpg\"" + line_feed);
-                    os.writeBytes("Content-Type: image/jpeg" + line_feed);
-//                    os.writeBytes("Content-Transfer-Encoding: binary" + line_feed);
-                    os.writeBytes(line_feed);
-                    os.write(imagePart.body().toString().getBytes());
-                    os.writeBytes(line_feed);
-                    os.writeBytes(twoHyphens + boundary + twoHyphens + line_feed);
+                    os.write(sb.toString().getBytes());
+                    os.write(coverImageData, 0, coverImageData.length);
+                    os.write((line_feed + twoHyphens + boundary + twoHyphens + line_feed).getBytes());
 
                     os.flush();
+                    os.close();
 
                     int res = connection.getResponseCode();
                     if (res == 200) {
