@@ -4,21 +4,11 @@
 
 
 
-## 说明
+## 作业
 
-Chapter_5-Android: 课程讲义
+作业存放在homework目录中
 
-Demo: 课程演示demo
+本次作业完成三个必做模块和一个选做模块
 
-Homework: 作业工程
+代码存放在https://github.com/Madoka-Zhang/Android_zju_summer/tree/Ch5
 
-
-## 如何提交作业
-
-作业地址: Homework/
-
-提交方式: 提交到你的 Repository 中 Homework-Chapter-5 目录。并将git仓库地址发送到 wenruri@bytedance.com，邮件标题：浙大+姓名+学号+第五讲 
-
-截止时间: 7月16日 24:00
-
-补交作业: 和大作业一起提交
